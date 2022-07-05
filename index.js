@@ -39,9 +39,13 @@ function flatten (target, opts) {
 
       if (!isarray && !isbuffer && isobject && Object.keys(value).length &&
         (!opts.maxDepth || currentDepth < maxDepth)) {
-        return step(value, newKey, currentDepth + 1)
-      }
-
+          if (Number.isInteger(Object.keys(value).reduce((acc,curr) => Number.parseInt(acc)+Number.parseInt(curr), 0)) && isobject) {
+            let array = new Array(Object.values(value))
+            return step(array, newKey, currentDepth + 1)
+          } else {
+            return step(value, newKey, currentDepth + 1)
+          }
+        }
       output[newKey] = value
     })
   }
